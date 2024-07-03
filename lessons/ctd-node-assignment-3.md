@@ -17,7 +17,7 @@ You continue working in the node-express-course repository, but for this week, y
 6. Try the URL http://localhost:3000/not-there. You should see that your `app.all` for page not found returns a 404 error.
 7. For the next part, you will implement APIs that return JSON. Because you are using the browser to display the JSON, you may want to add a JSON formatter plugin into your browser ([here’s one for Chrome](https://chrome.google.com/webstore/detail/jsonvue/chklaanhfefbnpoihckbnefhakgolnmc), for example), so that it’s easier to view. Add an `app.get` statement to `app.js`. It should be _after_ the Express static middleware, but _before_ the “not found” handler. It should be for the URL `/api/v1/test`. It should return JSON using the following code:
 
-```
+```javascript
 res.json({ message: "It worked!" });
 ```
 
@@ -25,7 +25,7 @@ Try that URL from your browser, and verify that it works.
 
 1. Next, we want to return some data. We haven’t learned how to access a database from Express yet, so the instructor has provided data to use. It is in `data.js`, so have a look at that file. Then add the following require statement to the top of the program:
 
-```
+```javascript
 const { products } = require("./data");
 ```
 
@@ -38,7 +38,7 @@ array. Test the url with your browser.
 1. Next, you need to provide a way to retrieve a particular product by ID. This is done by having an `app.get` statement for the url `/api/v1/products/:productID`. The colon in this url means that `:productID` is a _parameter_. So, when your server receives the GET request for a URL like `/api/v1/products/7`, `req.params` will have the hash `{ productID: 7 }`. Try this out by creating the `app.get` statement and doing a `res.json(req.params)` to return the path parameter in the HTTP response itself.
 2. Of course, the API should actually return, in JSON form, the product that has an ID of 7\. So you need to find that product in the array. For that, you use the `.find` [function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global%5FObjects/Array/find) of the array:
 
-```
+```javascript
 const idToFind = parseInt(req.params.productID); 
 const product = products.find((p) => p.id === idToFind);
 ```

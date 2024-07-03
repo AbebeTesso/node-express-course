@@ -4,7 +4,7 @@ In this lesson, you parse the query parameters passed with the REST request, app
 
 One part of this assignment is a little confusing. You will see code like this:
 
-```
+```javascript
 let result = Product.find(queryObject);
 ...
 result = result.sort(sortList);

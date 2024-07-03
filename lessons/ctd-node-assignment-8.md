@@ -29,7 +29,7 @@ _(right-click and open image in a new tab to see it a little larger)_
 
 Now open up the POST request for logon. Click on tests. Then enter the following code:
 
-```
+```javascript
 const jsonData = pm.response.json();
 pm.environment.set("token", jsonData.token);
 ```

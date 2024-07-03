@@ -6,7 +6,7 @@ Create a file in the starter directory called `QuizAnswers2.txt`. Put answers to
 
 1. In this lesson, you created a middleware function called `asyncWrapper`. Why?
 2. Suppose that you want to make sure that both a status code and an error message are sent back to the user when they request the URL for a task that does not exist. Assume that you’ve created a `CustomAPIError` class and an error handler that references that class. Complete the code:  
-```  
+```javascript  
 const getTask = asyncWrapper(async (req, res, next) => {  
   const { id: taskID } = req.params;  
   const task = await Task.findOne({ _id: taskID });  

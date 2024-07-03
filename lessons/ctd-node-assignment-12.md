@@ -80,7 +80,7 @@ You do not need a `public` directory. The pages are rendered by the `EJS` engine
 
 Next, create the boilerplate `app.js`. It should look as follows:
 
-```
+```javascript
 const express = require("express");
 require("express-async-errors");
 
@@ -227,7 +227,7 @@ SESSION_SECRET=123lkawjg091u82378429
 
 The secret is some hard to guess string — and you **_never_** want to publicize it to Github! Then, add the following lines to `app.js`. These lines should be added _before_ any of the lines that govern routes, such as the `app.get` and `app.post` statements:
 
-```
+```javascript
 require("dotenv").config(); // to load the .env file into the process.env object
 const session = require("express-session");
 app.use(
@@ -241,7 +241,7 @@ app.use(
 
 Change the logic so that the secret word is stored and retrieved in the session, as follows:
 
-```
+```javascript
 // let secretWord = "syzygy"; <-- comment this out or remove this line
 app.get("/secretWord", (req, res) => {
   if (!req.session.secretWord) {
@@ -267,7 +267,7 @@ This is the key used to retrieve session data. You can also see that the `HttpOn
 
 We want to store the session data in a durable way. To do this, we’ll use Mongo as a session store. Replace the one line that does the `app.use` for session with all of these lines:
 
-```
+```javascript
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
 
@@ -312,7 +312,7 @@ app.use(require("connect-flash")());
 
 We want to set some messages into flash. To do this, change the `POST` route for `/secretWord` to look like this:
 
-```
+```javascript
 app.post("/secretWord", (req, res) => {
   if (req.body.secretWord.toUpperCase()[0] == "P") {
     req.flash("error", "That word won't work!");
@@ -344,7 +344,7 @@ Whoa! you may be saying. That doesn’t look like HTML! What will the browser do
 
 But, the problem is that the `info` and `errors` arrays need to get passed into the EJS file, when the render is called. This could be done as follows:
 
-```
+```javascript
 res.render("secretWord", {
   secretWord,
   errors: flash("error"),
@@ -354,7 +354,7 @@ res.render("secretWord", {
 
 But this is a little clumsy, because if we have a bunch of pages we render, every render statement would have to be modified. So, instead, we put the values in `res.locals`. That hash contains values that are always available to the EJS rendering engine. As follows:
 
-```
+```javascript
 app.get("/secretWord", (req, res) => {
   if (!req.session.secretWord) {
     req.session.secretWord = "syzygy";

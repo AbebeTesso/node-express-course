@@ -16,7 +16,7 @@ At this point, you may get a merge conflict. This happens if there are changes t
 
 Make the following changes to `app.js` and related files. (Note that examples of code that perform these functions are available in the `final` directory.) First, create a _middleware function_ called `logger` in `app.js`. A middleware function is passed `req` and `res` as its first two parameters, just like an `app.get` call, but it is also passed a third parameter, `next`. The next() function must be called once middleware processing is completed, otherwise no response is sent back for the request. The middleware function you create should log the `method` and `url` properties from the `req` object, as well as the current time, before calling `next()`. Middleware functions are called in two ways. First, you can insert them into your route statements, as follows:
 
-```
+```javascript
 app.get('/', logger, (req, res) => {
     ...
 })
@@ -25,7 +25,7 @@ app.get('/', logger, (req, res) => {
 This means the `logger` middleware function will run before any `GET` request to the `/` path.  
 The second way to invoke middleware is via an `app.use()` statement:
 
-```
+```javascript
 app.use(["/path1", "/path2"], logger);
 ```
 
@@ -33,20 +33,20 @@ In this case, the first argument is a path or an array of paths indicating the u
 
 Next, you need to implement some APIs for people. You have a require statement for `./data.js` that gets the value of products. Get the value for people, also from `./data.js` (add this in the same require statement). Then implement an `app.get` for `/api/v1/people`. Test it with your browser. You are returning JSON, so you call res.json(…) to send the data back. You now need to implement an `app.post` for `/api/v1/people`. This is to add an entry to the people array. Post operations are sent from the browser with a “request body”. You need to add middleware to parse this body into a Javascript object. The following statements do this parsing, returning the result as a hash in `req.body`.
 
-```
+```javascript
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 ```
 
 The first of these parses url-encoded data, which is the format that is sent by an HTML form. This is not typically needed if you are only implementing a JSON API. The second statement parses a JSON body. You need these statements before your `app.post()` statement, so that the body is parsed before you do the rest of the processing. Now you implement the `app.post` statement for `/api/v1/people`. The statement should check `req.body` to see if there is a `req.body.name` property. If not, it should return JSON for an error, as follows:
 
-```
+```javascript
 res.status(400).json({ success: false, message: "Please provide a name" });
 ```
 
 This sets the HTTP result code to [400](https://http.dev/400), which means there was an error on the client side, and also returns an error message. But suppose there is a value in req.body.name. You want to add this entry to the people array, as follows:
 
-```
+```javascript
 people.push({ id: people.length + 1, name: req.body.name });
 res.status(201).json({ success: true, name: req.body.name });
 ```
@@ -57,20 +57,20 @@ Now is the time to test it out using Postman. Create a Postman GET request for `
 
 The next step is refactoring. You do not want too much logic in the `app.js` file. Create directories called routes and controllers. Create a file called `routes/people.js`. It should start with the following statements:
 
-```
+```javascript
 const express = require("express");
 const router = express.Router();
 ```
 
 You then need to add a `router.get()` statement for the `"/"` path. This should do the same thing as your `app.get("/api/v1/people")` statement. Similarly, you need a `router.post()` statement for `"/"`. Finally, at the bottom, you need `module.exports = router`. You now need to add a require statement in the `app.js` file, to import the `peopleRouter` code. Then you need the following `app.use()` statement, also in app.js:
 
-```
+```javascript
 app.use("/api/v1/people", peopleRouter);
 ```
 
 Be careful that this `app.use` statement comes _after_ the parsing of the body, or stuff won’t work as expected. Then comment out your `app.get` and `app.post` statements for `/api/v1/people`. Test the result using Postman, fixing bugs as needed. The refactoring is not yet done. You need to create the file `controllers/people.js`. That should start with a require statement that gets the people array from `../data.js`. Then create functions `addPerson` and `getPeople`. These are each passed `req` and `res`. Copy the logic from your `router/people.js` file, for both the GET and the POST. Then export `{ addPerson, getPeople }`. Then require them in your `routes/people.js`, as follows:
 
-```
+```javascript
 const { addPerson, getPeople } = require("../controllers/people.js");
 ```
 
@@ -82,7 +82,7 @@ Then move the logic for the statement to `controllers/people.js`, and update the
 
 This optional assignment gives some idea of how authentication might work. You will use the `cookie-parser` npm package, so do an `npm install` for that package. Cookies are set, typically by the back end, the browser then stores them and attaches them to each subsequent request. This allows us to add some “state” to each HTTP request. That is, the browser and backend can ‘remember’ some information automatically across requests, like for example, which user is making these requests. Add to `app.js` a require statement for `cookie-parser`. Then, right after you parse the body of the request, add a statement to parse the cookies:
 
-```
+```javascript
 app.use(cookieParser());
 ```
 

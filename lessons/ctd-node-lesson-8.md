@@ -36,7 +36,7 @@ But some errors are not expected — that is, if your code is working right, the
 
 The `StatusError` class could look like this:
 
-```
+```javascript
 class StatusError extends Error {
   constructor(message, resultCode) {
     super(message);
@@ -47,7 +47,7 @@ class StatusError extends Error {
 
 Using this class, if your authentication middleware finds that the JWT token is missing or invalid, you can just throw the error as follows:
 
-```
+```javascript
 throw new StatusError(
   "The request was not authenticated",
   StatusCodes.UNAUTHORIZED

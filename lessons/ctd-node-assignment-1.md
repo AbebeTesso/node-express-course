@@ -23,7 +23,7 @@ Your homework should include the following programs:
 2. `02-globals.js`: This program should use the `console.log` function to write some globals to the screen. Set an environment variable with the following command in your command line terminal: `export MY_VAR="Hi there!"` The program should then use `console.log` to print out the values of `__dirname` (a Node global variable) and `process.env.MY_VAR` (`process` is also a global, and contains the environment variables you set in your terminal.) You could print out other globals as well ([Node documentation](https://nodejs.org/api/globals.html#global-objects) on available globals). For each of these programs, you invoke them with `node` to make sure they work.
 3. For the next part, you will write multiple programs. `04-names.js`, `05-utils.js`, `06-alternative-flavor.js`, and `07-mind-grenade.js` are modules that you load, using require statements, from the `03-modules.js` file, which is the main program. Remember that you must give the path name in your require statement, for example:
 
-```
+```javascript
 const names = require("./04-names.js");
 ```
 
@@ -38,7 +38,7 @@ const names = require("./04-names.js");
 
 1. `08-os-module.js`: This should load the built-in `os` Node module and display some interesting information from the resulting object. As for all modules, you load a reference to it with a require statement, in this case
 
-```
+```javascript
 const os = require("os");
 ```
 
@@ -57,7 +57,7 @@ C:\Users\JohnSmith\node-express-course\01-node-tutorial\answers
 1. `10-fs-sync.js`: This should load `writeFileSync` and `readFileSync` functions from the `fs` module. Then you will use `writeFileSync` to write 3 lines to a file, `./temporary/fileA.txt`, using the `"append"` flag for each line after the first one. Then use `readFileSync` to read the file, and log the contents to the console. Be sure you create the file in the `temporary` directory. That will ensure that it isn’t pushed to Github when you submit your answers (because that file has been added to the `.gitignore` file for you already which tells git not to look at those files).
 2. `11-fs-async.js`: This should load the `fs` module, and use the asynchronous function `writeFile` to write 3 lines to a file, `./temporary/fileB.txt`. Now, be careful here! This is our first use of **asynchronous functions** in this class, but we are going to use them a lot! First, you need to use the `"append"` flag for all but the first line. Second, each time you write a line to the file, you need to have a callback, because the `writeFile` operation is asynchronous. Third, for each line you write, you need to do the write for the line that follows it within the callback – otherwise the operations won’t happen in order. Put `console.log` statements at various points in your code to tell you when each step completes. Then run the code. Do the console log statements appear in the order you expect? Run the program several times and verify that the file is created correctly. Here is how you might start:
 
-```
+```javascript
 const { writeFile } = require("fs");
 console.log("at start");
 writeFile("./temporary/output.txt", "This is line 1\n", (err, result) => {

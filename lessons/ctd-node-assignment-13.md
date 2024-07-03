@@ -119,7 +119,7 @@ These changes won’t suffice to do anything in the application, until routes ar
 
 Create a file `routes/sessionRoutes.js`, as follows:
 
-```
+```javascript
 const express = require("express");
 // const passport = require("passport");
 const router = express.Router();
@@ -152,7 +152,7 @@ module.exports = router;
 
 Ignore the passport lines for the moment. This just sets up the routes. We need to create a corresponding file `controllers/sessionController.js`. Here we use the `User` model. However, the file you copied makes some references to the JWT library. You must edit `models/User.js` to remove those references in order for `User.js` to load. We aren’t using JWTs in this project.
 
-```
+```javascript
 const User = require("../models/User");
 const parseVErr = require("../util/parseValidationErr");
 
@@ -215,7 +215,7 @@ The `registerDo` handler will check if the two passwords the user entered match,
 
 If there is a Mongoose validation error when creating a user record, we need to parse the validation error object to return the issues to the user in a more helpful format, and we do that in the file util/parseValidationErrs.js:
 
-```
+```javascript
 const parseValidationErrors = (e, req) => {
   const keys = Object.keys(e.errors);
   keys.forEach((key) => {
@@ -228,7 +228,7 @@ module.exports = parseValidationErrors;
 
 We need some middleware to load `res.locals` with any variables we need, like the logged in user and flash properties. Create `middleware/storeLocals.js`:
 
-```
+```javascript
 const storeLocals = (req, res, next) => {
   if (req.user) {
     res.locals.user = req.user;
@@ -245,7 +245,7 @@ module.exports = storeLocals;
 
 Now, we need a couple of `app.use` statements. Add these lines right after the `connect-flash` line:
 
-```
+```javascript
 app.use(require("./middleware/storeLocals"));
 app.get("/", (req, res) => {
   res.render("index");
@@ -257,7 +257,7 @@ The storeLocals middleware sets the values for errors, info, and user, but in re
 
 We are now using the database. So, we need to connect to it at startup. You need a file, `db/connect.js`. Check that it looks like the following:
 
-```
+```javascript
 const mongoose = require("mongoose");
 
 const connectDB = (url) => {
@@ -269,7 +269,7 @@ module.exports = connectDB;
 
 Then add this line to `app.js`, just before the listen line:
 
-```
+```javascript
 await require("./db/connect")(process.env.MONGO_URI);
 ```
 
@@ -279,7 +279,7 @@ Then try the application out, starting at the `"/"` URL. You can try each of the
 
 To use Passport, you have to tell it how to authenticate users, retrieving them from the database. Create a file `passport/passportInit.js`, as follows:
 
-```
+```javascript
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/User");
@@ -349,7 +349,7 @@ Then when Passport is handling a protected route, it will use the `deserializeUs
 
 You can now add the following lines to `app.js`, right _after_ the `app.use` for session (Passport relies on session):
 
-```
+```javascript
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 
@@ -364,7 +364,7 @@ Then we call `passport.initialize()` (which sets up Passport to work with Expres
 
 Finally, you can now uncomment the lines having to do with Passport in `routes/sessionRoutes.js`, so that the require statement for Passport is included, and so that the route for logon looks like
 
-```
+```javascript
 router
   .route("/logon")
   .get(logonShow)
@@ -381,7 +381,7 @@ This means that when someone sends a `POST` request to the `/sessions/logon` pat
 
 Since we’re letting Passport handle setting the `req.flash` properties now, we can remove the lines in `controllers/sessionController.js` that set the flash messages for the `loginShow` handler. So that should now just look like:
 
-```
+```javascript
 const logonShow = (req, res) => {
   if (req.user) {
     return res.redirect("/");
@@ -398,7 +398,7 @@ To protect a route, you need some middleware, as follows.
 
 `middleware/auth.js`:
 
-```
+```javascript
 const authMiddleware = (req, res, next) => {
   if (!req.user) {
     req.flash("error", "You can't access that page before logon.");
@@ -417,7 +417,7 @@ We want to protect any route for the `"/secretWord"` path. The best practice is 
 
 `routes/secretWord.js`:
 
-```
+```javascript
 const express = require("express");
 const router = express.Router();
 
@@ -448,14 +448,14 @@ We could further refactor this by moving the code for handling the routes (`(req
 
 Next let’s replace the `app.get` and `app.post` statements for the `"/secretWord"` routes in `app.js` with these lines:
 
-```
+```javascript
 const secretWordRouter = require("./routes/secretWord");
 app.use("/secretWord", secretWordRouter);
 ```
 
 Then try out the secretWord page to make sure it still works. Turning on protection is simple. You add the authentication middleware to the route above as follows:
 
-```
+```javascript
 const auth = require("./middleware/auth");
 app.use("/secretWord", auth, secretWordRouter);
 ```

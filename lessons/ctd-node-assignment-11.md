@@ -102,7 +102,7 @@ This front end uses a single-page style. There are multiple views in the page, i
 
 Edit `app.js`. Comment out the following lines:
 
-```
+```javascript
 app.get("/", (req, res) => {
   res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
 });
@@ -110,7 +110,7 @@ app.get("/", (req, res) => {
 
 Add the following line below these commented out lines:
 
-```
+```javascript
 app.use(express.static("public"));
 ```
 
@@ -134,7 +134,7 @@ To begin, add the following line to index.html, right above the close of the bod
 
 These modules call one another using the exports that each provides. For this to work, you must declare it as type `module`. Create `index.js` in the public directory. The `index.js` module should read as follows:
 
-```
+```javascript
 let activeDiv = null;
 export const setDiv = (newDiv) => {
   if (newDiv != activeDiv) {
@@ -203,7 +203,7 @@ You will need to create `loginRegister.js`, `register.js`, `login.js`, `jobs.js`
 
 The `loginRegister.js` module is as follows:
 
-```
+```javascript
 import { inputEnabled, setDiv } from "./index.js";
 import { showLogin } from "./login.js";
 import { showRegister } from "./register.js";
@@ -237,7 +237,7 @@ A separate function handles display of the div. (React works in similar fashion,
 
 The `register.js` module is as follows:
 
-```
+```javascript
 import {
   inputEnabled,
   setDiv,
@@ -285,7 +285,7 @@ export const showRegister = () => {
 
 The `login.js` module is as follows:
 
-```
+```javascript
 import {
   inputEnabled,
   setDiv,
@@ -328,7 +328,7 @@ export const showLogin = () => {
 
 The `jobs.js` module is as follows:
 
-```
+```javascript
 import {
   inputEnabled,
   setDiv,
@@ -369,7 +369,7 @@ export const showJobs = async () => {
 
 The `addEdit.js` module is as follows:
 
-```
+```javascript
 import { enableInput, inputEnabled, message, setDiv, token } from "./index.js";
 import { showJobs } from "./jobs.js";
 
@@ -416,7 +416,7 @@ First, we’ll make register and logon work. For either register or logon, if th
 
 Adding these capabilities to `register.js` gives the following:
 
-```
+```javascript
 import {
   inputEnabled,
   setDiv,
@@ -514,7 +514,7 @@ Notice that we always clear out the input values before we switch to another pag
 
 The `login.js` module becomes:
 
-```
+```javascript
 import {
   inputEnabled,
   setDiv,
@@ -590,7 +590,7 @@ export const showLogin = () => {
 
 Make these changes and test the application again. You should find that you can register and logon. Logoff doesn’t work right at present, but this can be corrected in `jobs.js` with the following change:
 
-```
+```javascript
       } else if (e.target === logoff) {
         setToken(null);
 
@@ -606,7 +606,7 @@ Note that logoff involves no communication with the back end. The user is logged
 
 Next we need to make the changes so that we can create job entries. The `addEdit.js` module is changed as follows:
 
-```
+```javascript
 addEditDiv.addEventListener("click", async (e) => {
   if (inputEnabled && e.target.nodeName === "BUTTON") {
     if (e.target === addingJob) {
@@ -663,7 +663,7 @@ There is a somewhat tricky part to this. We want to have edit and delete buttons
 
 It looks like this in `jobs.js`:
 
-```
+```javascript
 export const showJobs = async () => {
   try {
     enableInput(false);
@@ -715,7 +715,7 @@ So, plug this code into `jobs.js` at the appropriate point, and then try the app
 
 However, the edit and delete buttons don’t actually work. This is because the click handler in `jobs.js` isn’t set to look for them yet. We can add a section to the click handler to remedy this.
 
-```
+```javascript
       } else if (e.target.classList.contains("editButton")) {
         message.textContent = "";
         showAddEdit(e.target.dataset.id);
@@ -726,7 +726,7 @@ The `dataset.id` contains the id of the entry to be edited. That is then passed 
 
 This function is in `addEdit.js`, and should be changed as follows:
 
-```
+```javascript
 export const showAddEdit = async (jobId) => {
   if (!jobId) {
     company.value = "";
@@ -778,7 +778,7 @@ With this change, the `add/edit` div will be displayed with the appropriate valu
 
 So far, so good, but what happens when the user clicks on the update button? In this case, we need to do a PATCH instead of a POST, and we need to include the id of the entry to be updated in the URL. So we need the following additional changes to addEdit.js:
 
-```
+```javascript
 if (e.target === addingJob) {
   enableInput(false);
 
@@ -837,13 +837,13 @@ You’ll call the jobs delete API, and in the URL you will include the ID of the
 
 **Note:** There is an error in the implementation of the delete operation in the jobs controller. The instructor’s guidance is to use this line:
 
-```
+```javascript
 res.status(StatusCodes.OK).send();
 ```
 
 This is incorrect, because an empty body is not valid JSON. Change it to:
 
-```
+```javascript
 res.status(StatusCodes.OK).json({ msg: "The entry was deleted." });
 ```
 

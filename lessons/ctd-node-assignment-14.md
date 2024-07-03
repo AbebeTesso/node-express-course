@@ -56,7 +56,7 @@ This is really a form masquerading as a button. And, because it’s a form, you 
 
 Ok, so how to build the table? The `GET` for `"/jobs"` comes in, and your router calls a function in your controller to pull all the job listings for that user from the database into a jobs array (which might be empty). Then the controller function makes the following call:
 
-```
+```javascript
 res.render("jobs", { jobs });
 ```
 
@@ -106,7 +106,7 @@ So that the actual id of the entry to delete is included in the URL on the `POST
 1. Create `routes/jobs.js` and `controllers/jobs.js`. The router should have each of the routes previously described, and the controller should have functions to call when each route is invoked. Remember that `req.params` will have the id of the entry to be edited, updated, or deleted. You might want to start with simple `res.send()` operations to make sure each of the routes and controller functions are getting called as expected.
 2. In `app.js`, `require` the jobs router, and add an `app.use` statement for it, at an appropriate place in the code. The `app.use` statement might look like:
 
-```
+```javascript
 app.use("/jobs", auth, jobs);
 ```
 

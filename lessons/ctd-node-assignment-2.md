@@ -38,7 +38,7 @@ The scripts give npm commands you can run as you develop. In this case, the comm
 
 Now for some code. The instructor showed several patterns for JavaScript asynchronous programming. An asynchronous Javascript function returns a [Promise](https://javascript.info/promise-basics), or in some cases a “thenable” which acts like a Promise. You need to resolve the Promise in order to get the actual return value. To resolve a Promise inside an `async function`, you use the keyword, `await`. This should be used inside a `try/catch` block so that you can handle any errors, as follows:
 
-```
+```javascript
 const myFunc = async () => {
     ...
     return result
@@ -59,7 +59,7 @@ is not async. In this case, you can’t use `await` – it will give a
 syntax error. So you can either use `.then` or you can wrap the  
 function call as follows:
 
-```
+```javascript
 const myFunc3 = () => {  // not async, and in some contexts we better not make it async
    myFunc()
    .then((result) => {
@@ -90,7 +90,7 @@ const myFunc4 = () => {  // the other way to do it, via a wrapper:
 
 There’s one more trick with the `.then`. Suppose you need to make a string of calls to async functions. You can chain the `.then` statements as follows:
 
-```
+```javascript
 const myFunc6 = () => {
   myFunc() // an async function, so it returns a promise
     .then((result) => {
@@ -125,7 +125,7 @@ Create another async function called `reader` that reads the file with `await re
 Now we want to call the two functions in order, first the writer, and the reader. But, be careful! These are asynchronous functions, so if you just call them, you don’t know what order they’ll occur in. And you can’t use await in your mainline code. So, you write a third async function called `readWrite`. In that function, you call await reader and await writer. Finally, write a line at the bottom of the file that calls the `readWrite` function. Test your code. The temp.txt file that your code is creating should not be sent to Github, so you should add this filename as  
 another line to your `.gitignore.`
 2. Write another program called `writeWithPromisesThen.js` also in the `01-node-tutorial/answers` folder. Again you write to temp.txt. You start it the same way, but this time, you use the `.then` style of asynchronous programming. You don’t need to create any functions. Instead, you just use cascading .then statements in your mainline, like this:  
-```  
+```javascript 
  writeFile(...) // write line 1  
  .then(() => {  
     return writeFile(...)  // write line 2.  
@@ -142,14 +142,14 @@ Test your code by running `node writeWithPromisesThen.js`. You may
 want to sprinkle console.log statements in your code so that you understand  
 the order of execution.
 3. We want to understand event emitters. First, modify `prompter.js`, to add the following lines above the listen statement:  
-```  
+```javascript  
 server.on("request", (req) => {  
   console.log("event received: ", req.method, req.url);  
 });  
 ```  
 Then test this (`npm run dev`) and try with your browser to see the events the server is emitting.
 4. Write a program named `customEmitter.js` in the `01-node-tutorial/answers` folder. In it, create one or several emitters. Then use the emitter `.on` function to handle the events you will emit, logging the parameters to the screen. Then use the emitter `.emit` function to emit several events, with one or several parameters, and make sure that the events are logged by your event handlers. This is your chance to be creative! You could have an event handler that emits a different event to be picked up by a different handler, for example. Here’s a couple tricks to try. You can trigger events with a timer, as follows:  
-```  
+```javascript  
 const EventEmitter = require("events");  
 const emitter = new EventEmitter();  
 setInterval(() => {  
@@ -158,7 +158,7 @@ setInterval(() => {
 emitter.on("timer", (msg) => console.log(msg));  
 ```  
 Or, you could make an async function that waits on an event:  
-```  
+```javascript  
 const EventEmitter = require("events");  
 const emitter = new EventEmitter();  
 const waitForEvent = () => {  
